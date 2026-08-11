@@ -36,6 +36,25 @@ jobs:
           echo "Repository files:"
           find . -maxdepth 4 -type f | sort
           
-      - name: Run unit tests
+      - name: Diagnose Python import
         run: |
-          pytest
+          echo "===== Current directory ====="
+          pwd
+
+          echo "===== app directory ====="
+          ls -la app
+
+          echo "===== Python version ====="
+          python --version
+
+          echo "===== Python sys.path ====="
+          python -c "import sys; print('\n'.join(sys.path))"
+
+          echo "===== Test direct import ====="
+          python -c "import app; print(app); print(app.__file__)"
+
+          echo "===== Test application import ====="
+          python -c "from app.app import calculate_total; print(calculate_total(100, 10))"
+
+      - name: Run tests
+        run: pytest -v
